@@ -1,0 +1,18 @@
+spring:
+  http:
+    # Character set encoding
+    encoding:
+      enabled: true
+      force: true
+  # Testing email configuration
+  mail:
+    host: localhost
+    port: 3025
+
+
+logging:
+  level:
+    root: DEBUG
+    org.springframework.data: INFO
+    org.springframework.jdbc.core.JdbcTemplate: DEBUG
+

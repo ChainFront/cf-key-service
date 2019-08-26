@@ -1,0 +1,2086 @@
+<!--
+  ~ Copyright (c) 2019 ChainFront LLC.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="main.css">
+        <meta charset="UTF-8">
+        <title>ChainFront Key Management Service</title>
+    </head>
+    <body>
+        <div class="container">
+            <h1>ChainFront Key Management Service</h1>
+            <p class="sw-info">
+                Base URL: <span class="sw-info-basePath">/v1/eth</span>,
+                Version: <span class="sw-info-version">0.9.0-alpha</span>
+            </p>
+            <p></p>
+
+
+            <div id="sw-schemes" class="sw-default-value">
+                <span class="sw-default-value-header">Schemes:</span>
+                https
+            </div>
+
+
+            <h2 id="swagger--summary-tags">Summary</h2>
+            <h3 id="tag-Account-Service" class="swagger-summary-tag">Tag: Account Service</h3>
+            <p>Account management APIs</p>
+
+            <p class="sw-tag-external-doc">
+            </p>
+            <table class="table table-bordered table-condensed swagger--summary">
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#operation--accounts-get">GET /accounts</a></td>
+                        <td><p>List accounts</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="#operation--accounts-post">POST /accounts</a></td>
+                        <td><p>Create account</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="#operation--accounts--name--get">GET /accounts/{name}</a></td>
+                        <td><p>Get account</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3 id="tag-Contract-Service" class="swagger-summary-tag">Tag: Contract Service</h3>
+            <p>Contract APIs</p>
+
+            <p class="sw-tag-external-doc">
+            </p>
+            <table class="table table-bordered table-condensed swagger--summary">
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#operation--contracts-get">GET /contracts</a></td>
+                        <td><p>List contracts</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="#operation--contracts-post">POST /contracts</a></td>
+                        <td><p>Create contract</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="#operation--contracts--name--get">GET /contracts/{name}</a></td>
+                        <td><p>Get contract</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="#operation--contracts--name--invoke-post">POST /contracts/{name}/invoke</a></td>
+                        <td><p>Invoke a contract</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3 id="tag-Payment-Service" class="swagger-summary-tag">Tag: Payment Service</h3>
+            <p>Payment APIs</p>
+
+            <p class="sw-tag-external-doc">
+            </p>
+            <table class="table table-bordered table-condensed swagger--summary">
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#operation--transactions-payments-post">POST /transactions/payments</a></td>
+                        <td><p>Create a signed payment transaction to transfer ETH between 2 accounts</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="#operation--transactions-tokenpayments-post">POST /transactions/tokenpayments</a>
+                        </td>
+                        <td><p>Create a signed payment transaction to transfer ERC-20 tokens between 2 accounts</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <h2>Security</h2>
+
+            <div id="security-definition-OAuth2"
+                 class="panel panel-security-definition panel-security-definition-oauth2">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><span class="security-name">OAuth2</span></h3>
+                    Type: oauth2
+                </div>
+                <div class="panel-body">
+                    <section class="sw-security-properties">
+                        <dl>
+                            <dt class="security-property-name">Flow:</dt>
+                            <dd class="security-property-type">
+                                <div class="row">
+                                    <div class="col-md-12"><p>accessCode</p></div>
+                                </div>
+                            </dd>
+                            <dt class="security-property-name">AuthorizationUrl:</dt>
+                            <dd class="security-property-type">
+                                <div class="row">
+                                    <div class="col-md-12"><p>https://api.chainfront.io/oauth/authorization</p></div>
+                                </div>
+                            </dd>
+                            <dt class="security-property-name">TokenUrl:</dt>
+                            <dd class="security-property-type">
+                                <div class="row">
+                                    <div class="col-md-12"><p>https://api.chainfront.io/oauth/token</p></div>
+                                </div>
+                            </dd>
+                            <dt class="security-property-name">Scopes:</dt>
+                            <dd class="security-property-type">
+                                <div class="row">
+                                    <div class="col-md-12"><strong>admin:</strong> Admin scope</div>
+                                </div>
+                            </dd>
+                            <dd class="security-property-type">
+                                <div class="row">
+                                    <div class="col-md-12"><strong>write:accounts:</strong> Ability to create accounts
+                                    </div>
+                                </div>
+                            </dd>
+                            <dd class="security-property-type">
+                                <div class="row">
+                                    <div class="col-md-12"><strong>read:accounts:</strong> Ability to read accounts
+                                    </div>
+                                </div>
+                            </dd>
+                            <dd class="security-property-type">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <strong>write:payments:</strong> Ability to create payment transactions
+                                    </div>
+                                </div>
+                            </dd>
+                            <dd class="security-property-type">
+                                <div class="row">
+                                    <div class="col-md-12"><strong>write:contracts:</strong> Ability to create contracts
+                                    </div>
+                                </div>
+                            </dd>
+                            <dd class="security-property-type">
+                                <div class="row">
+                                    <div class="col-md-12"><strong>read:contracts:</strong> Ability to read contracts
+                                    </div>
+                                </div>
+                            </dd>
+                            <dd class="security-property-type">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <strong>execute:contracts:</strong> Ability to execute contracts
+                                    </div>
+                                </div>
+                            </dd>
+                            <p>
+                        </dl>
+                    </section>
+                </div>
+            </div>
+
+            <h2>Paths</h2>
+
+
+            <span id="path--accounts"></span>
+            <div id="operation--accounts-get" class="swagger--panel-operation-get panel">
+                <div class="panel-heading">
+                    <div class="operation-summary">List accounts</div>
+                    <h3 class="panel-title"><span class="operation-name">GET</span> <strong>/accounts</strong></h3>
+                    Tags:
+                    <a href="#tag-Account-Service">Account Service</a>
+                </div>
+                <div class="panel-body">
+                    <section class="sw-operation-description">
+                        <p>Returns a paginated list of all accounts.</p>
+
+                    </section>
+
+
+                    <section class="sw-request-params">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="sw-param-name"></th>
+                                    <th class="sw-param-description"></th>
+                                    <th class="sw-param-type"></th>
+                                    <th class="sw-param-data-type"></th>
+                                    <th class="sw-param-annotation"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        pageSize
+                                    </td>
+                                    <td><p>Number of accounts returned</p>
+                                    </td>
+                                    <td>query</td>
+                                    <td>
+                                        <span class="json-property-type">integer</span>
+                                        <span class="json-property-range" title="Value limits"></span>
+
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        pageNumber
+                                    </td>
+                                    <td><p>Page number</p>
+                                    </td>
+                                    <td>query</td>
+                                    <td>
+                                        <span class="json-property-type">integer</span>
+                                        <span class="json-property-range" title="Value limits"></span>
+
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section class="sw-responses">
+
+                        <dl>
+                            <dt class="sw-response-200">
+                                200 OK
+
+                            </dt>
+                            <dd class="sw-response-200">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>A list of accounts</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                        <div class="panel panel-definition">
+                                            <div class="panel-body">
+                                                <a class="json-schema-ref" href="#/definitions/Accounts">Accounts</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </dd>
+                            <dt class="sw-response-400">
+                                400 Bad Request
+                                <span class="swagger--global"></span> <span class="json-schema--reference"><a
+                                href="#/responses/BadRequest">#/responses/BadRequest</a></span>
+
+                            </dt>
+                            <dd class="sw-response-400">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Invalid request</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                    </div>
+
+                                </div>
+                            </dd>
+                            <dt class="sw-response-403">
+                                403 Forbidden
+                                <span class="swagger--global"></span> <span class="json-schema--reference"><a
+                                href="#/responses/Forbidden">#/responses/Forbidden</a></span>
+
+                            </dt>
+                            <dd class="sw-response-403">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>User not authorized to perform this operation</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                    </div>
+
+                                </div>
+                            </dd>
+                        </dl>
+                    </section>
+                    <section class="sw-request-security">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="sw-request-security-schema"></th>
+                                    <th class="sw-request-security-scopes"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a href="#security-definition-OAuth2">OAuth2</a></td>
+                                    <td>
+                                        read:accounts
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+            <div id="operation--accounts-post" class="swagger--panel-operation-post panel">
+                <div class="panel-heading">
+                    <div class="operation-summary">Create account</div>
+                    <h3 class="panel-title"><span class="operation-name">POST</span> <strong>/accounts</strong></h3>
+                    Tags:
+                    <a href="#tag-Account-Service">Account Service</a>
+                </div>
+                <div class="panel-body">
+                    <section class="sw-operation-description">
+                        <p>Create a new account</p>
+
+                    </section>
+
+
+                    <section class="sw-request-body">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>
+                                <p>Account to create. &#39;name&#39; is the only field required.</p>
+                                </p>
+                            </div>
+                            <div class="col-md-6 sw-request-model">
+                                <div class="panel panel-definition">
+                                    <div class="panel-body">
+                                        <a class="json-schema-ref" href="#/definitions/Account">Account</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="sw-responses">
+
+                        <dl>
+                            <dt class="sw-response-201">
+                                201 Created
+
+                            </dt>
+                            <dd class="sw-response-201">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Account created successfully</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                        <div class="panel panel-definition">
+                                            <div class="panel-body">
+                                                <a class="json-schema-ref" href="#/definitions/Account">Account</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </dd>
+                            <dt class="sw-response-400">
+                                400 Bad Request
+                                <span class="swagger--global"></span> <span class="json-schema--reference"><a
+                                href="#/responses/BadRequest">#/responses/BadRequest</a></span>
+
+                            </dt>
+                            <dd class="sw-response-400">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Invalid request</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                    </div>
+
+                                </div>
+                            </dd>
+                            <dt class="sw-response-403">
+                                403 Forbidden
+                                <span class="swagger--global"></span> <span class="json-schema--reference"><a
+                                href="#/responses/Forbidden">#/responses/Forbidden</a></span>
+
+                            </dt>
+                            <dd class="sw-response-403">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>User not authorized to perform this operation</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                    </div>
+
+                                </div>
+                            </dd>
+                        </dl>
+                    </section>
+                    <section class="sw-request-security">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="sw-request-security-schema"></th>
+                                    <th class="sw-request-security-scopes"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a href="#security-definition-OAuth2">OAuth2</a></td>
+                                    <td>
+                                        read:accounts
+                                        , write:accounts
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+
+            <span id="path--accounts--name-"></span>
+            <div id="operation--accounts--name--get" class="swagger--panel-operation-get panel">
+                <div class="panel-heading">
+                    <div class="operation-summary">Get account</div>
+                    <h3 class="panel-title"><span class="operation-name">GET</span> <strong>/accounts/{name}</strong>
+                    </h3>
+                    Tags:
+                    <a href="#tag-Account-Service">Account Service</a>
+                </div>
+                <div class="panel-body">
+                    <section class="sw-operation-description">
+                        <p>Returns account details for the given account name</p>
+
+                    </section>
+
+
+                    <section class="sw-request-params">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="sw-param-name"></th>
+                                    <th class="sw-param-description"></th>
+                                    <th class="sw-param-type"></th>
+                                    <th class="sw-param-data-type"></th>
+                                    <th class="sw-param-annotation"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        name
+                                    </td>
+                                    <td><p>Name of account</p>
+                                    </td>
+                                    <td>path</td>
+                                    <td>
+                                        <span class="json-property-type">string</span>
+                                        <span class="json-property-range" title="Value limits"></span>
+
+                                    </td>
+                                    <td>
+                                        <span class="json-property-required"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section class="sw-responses">
+
+                        <dl>
+                            <dt class="sw-response-200">
+                                200 OK
+
+                            </dt>
+                            <dd class="sw-response-200">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Account details</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                        <div class="panel panel-definition">
+                                            <div class="panel-body">
+                                                <a class="json-schema-ref" href="#/definitions/Account">Account</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </dd>
+                            <dt class="sw-response-400">
+                                400 Bad Request
+                                <span class="swagger--global"></span> <span class="json-schema--reference"><a
+                                href="#/responses/BadRequest">#/responses/BadRequest</a></span>
+
+                            </dt>
+                            <dd class="sw-response-400">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Invalid request</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                    </div>
+
+                                </div>
+                            </dd>
+                            <dt class="sw-response-403">
+                                403 Forbidden
+                                <span class="swagger--global"></span> <span class="json-schema--reference"><a
+                                href="#/responses/Forbidden">#/responses/Forbidden</a></span>
+
+                            </dt>
+                            <dd class="sw-response-403">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>User not authorized to perform this operation</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                    </div>
+
+                                </div>
+                            </dd>
+                        </dl>
+                    </section>
+                    <section class="sw-request-security">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="sw-request-security-schema"></th>
+                                    <th class="sw-request-security-scopes"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a href="#security-definition-OAuth2">OAuth2</a></td>
+                                    <td>
+                                        read:accounts
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+
+            <span id="path--contracts"></span>
+            <div id="operation--contracts-get" class="swagger--panel-operation-get panel">
+                <div class="panel-heading">
+                    <div class="operation-summary">List contracts</div>
+                    <h3 class="panel-title"><span class="operation-name">GET</span> <strong>/contracts</strong></h3>
+                    Tags:
+                    <a href="#tag-Contract-Service">Contract Service</a>
+                </div>
+                <div class="panel-body">
+                    <section class="sw-operation-description">
+                        <p>Returns a paginated list of all contracts.</p>
+
+                    </section>
+
+
+                    <section class="sw-request-params">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="sw-param-name"></th>
+                                    <th class="sw-param-description"></th>
+                                    <th class="sw-param-type"></th>
+                                    <th class="sw-param-data-type"></th>
+                                    <th class="sw-param-annotation"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        pageSize
+                                    </td>
+                                    <td><p>Number of contracts returned</p>
+                                    </td>
+                                    <td>query</td>
+                                    <td>
+                                        <span class="json-property-type">integer</span>
+                                        <span class="json-property-range" title="Value limits"></span>
+
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        pageNumber
+                                    </td>
+                                    <td><p>Page number</p>
+                                    </td>
+                                    <td>query</td>
+                                    <td>
+                                        <span class="json-property-type">integer</span>
+                                        <span class="json-property-range" title="Value limits"></span>
+
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section class="sw-responses">
+
+                        <dl>
+                            <dt class="sw-response-200">
+                                200 OK
+
+                            </dt>
+                            <dd class="sw-response-200">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>A list of contracts</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                        <div class="panel panel-definition">
+                                            <div class="panel-body">
+                                                <a class="json-schema-ref" href="#/definitions/Contracts">Contracts</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </dd>
+                            <dt class="sw-response-400">
+                                400 Bad Request
+                                <span class="swagger--global"></span> <span class="json-schema--reference"><a
+                                href="#/responses/BadRequest">#/responses/BadRequest</a></span>
+
+                            </dt>
+                            <dd class="sw-response-400">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Invalid request</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                    </div>
+
+                                </div>
+                            </dd>
+                            <dt class="sw-response-403">
+                                403 Forbidden
+                                <span class="swagger--global"></span> <span class="json-schema--reference"><a
+                                href="#/responses/Forbidden">#/responses/Forbidden</a></span>
+
+                            </dt>
+                            <dd class="sw-response-403">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>User not authorized to perform this operation</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                    </div>
+
+                                </div>
+                            </dd>
+                        </dl>
+                    </section>
+                    <section class="sw-request-security">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="sw-request-security-schema"></th>
+                                    <th class="sw-request-security-scopes"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a href="#security-definition-OAuth2">OAuth2</a></td>
+                                    <td>
+                                        read:contracts
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+            <div id="operation--contracts-post" class="swagger--panel-operation-post panel">
+                <div class="panel-heading">
+                    <div class="operation-summary">Create contract</div>
+                    <h3 class="panel-title"><span class="operation-name">POST</span> <strong>/contracts</strong></h3>
+                    Tags:
+                    <a href="#tag-Contract-Service">Contract Service</a>
+                </div>
+                <div class="panel-body">
+                    <section class="sw-operation-description">
+                        <p>Create a new contract</p>
+
+                    </section>
+
+
+                    <section class="sw-request-body">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>
+                                <p>The contract to create.</p>
+                                </p>
+                            </div>
+                            <div class="col-md-6 sw-request-model">
+                                <div class="panel panel-definition">
+                                    <div class="panel-body">
+                                        <a class="json-schema-ref" href="#/definitions/Contract">Contract</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="sw-responses">
+
+                        <dl>
+                            <dt class="sw-response-201">
+                                201 Created
+
+                            </dt>
+                            <dd class="sw-response-201">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Contract created successfully</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                        <div class="panel panel-definition">
+                                            <div class="panel-body">
+                                                <a class="json-schema-ref" href="#/definitions/Contract">Contract</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </dd>
+                            <dt class="sw-response-400">
+                                400 Bad Request
+                                <span class="swagger--global"></span> <span class="json-schema--reference"><a
+                                href="#/responses/BadRequest">#/responses/BadRequest</a></span>
+
+                            </dt>
+                            <dd class="sw-response-400">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Invalid request</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                    </div>
+
+                                </div>
+                            </dd>
+                            <dt class="sw-response-403">
+                                403 Forbidden
+                                <span class="swagger--global"></span> <span class="json-schema--reference"><a
+                                href="#/responses/Forbidden">#/responses/Forbidden</a></span>
+
+                            </dt>
+                            <dd class="sw-response-403">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>User not authorized to perform this operation</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                    </div>
+
+                                </div>
+                            </dd>
+                        </dl>
+                    </section>
+                    <section class="sw-request-security">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="sw-request-security-schema"></th>
+                                    <th class="sw-request-security-scopes"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a href="#security-definition-OAuth2">OAuth2</a></td>
+                                    <td>
+                                        read:contracts
+                                        , write:contracts
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+
+            <span id="path--contracts--name-"></span>
+            <div id="operation--contracts--name--get" class="swagger--panel-operation-get panel">
+                <div class="panel-heading">
+                    <div class="operation-summary">Get contract</div>
+                    <h3 class="panel-title"><span class="operation-name">GET</span> <strong>/contracts/{name}</strong>
+                    </h3>
+                    Tags:
+                    <a href="#tag-Contract-Service">Contract Service</a>
+                </div>
+                <div class="panel-body">
+                    <section class="sw-operation-description">
+                        <p>Returns contract details for the given contract name</p>
+
+                    </section>
+
+
+                    <section class="sw-request-params">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="sw-param-name"></th>
+                                    <th class="sw-param-description"></th>
+                                    <th class="sw-param-type"></th>
+                                    <th class="sw-param-data-type"></th>
+                                    <th class="sw-param-annotation"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        name
+                                    </td>
+                                    <td><p>Name of contract</p>
+                                    </td>
+                                    <td>path</td>
+                                    <td>
+                                        <span class="json-property-type">string</span>
+                                        <span class="json-property-range" title="Value limits"></span>
+
+                                    </td>
+                                    <td>
+                                        <span class="json-property-required"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section class="sw-responses">
+
+                        <dl>
+                            <dt class="sw-response-200">
+                                200 OK
+
+                            </dt>
+                            <dd class="sw-response-200">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Contract details</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                        <div class="panel panel-definition">
+                                            <div class="panel-body">
+                                                <a class="json-schema-ref" href="#/definitions/Contract">Contract</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </dd>
+                            <dt class="sw-response-400">
+                                400 Bad Request
+                                <span class="swagger--global"></span> <span class="json-schema--reference"><a
+                                href="#/responses/BadRequest">#/responses/BadRequest</a></span>
+
+                            </dt>
+                            <dd class="sw-response-400">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Invalid request</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                    </div>
+
+                                </div>
+                            </dd>
+                            <dt class="sw-response-403">
+                                403 Forbidden
+                                <span class="swagger--global"></span> <span class="json-schema--reference"><a
+                                href="#/responses/Forbidden">#/responses/Forbidden</a></span>
+
+                            </dt>
+                            <dd class="sw-response-403">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>User not authorized to perform this operation</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                    </div>
+
+                                </div>
+                            </dd>
+                        </dl>
+                    </section>
+                    <section class="sw-request-security">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="sw-request-security-schema"></th>
+                                    <th class="sw-request-security-scopes"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a href="#security-definition-OAuth2">OAuth2</a></td>
+                                    <td>
+                                        read:contracts
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+
+            <span id="path--contracts--name--invoke"></span>
+            <div id="operation--contracts--name--invoke-post" class="swagger--panel-operation-post panel">
+                <div class="panel-heading">
+                    <div class="operation-summary">Invoke a contract</div>
+                    <h3 class="panel-title"><span class="operation-name">POST</span>
+                        <strong>/contracts/{name}/invoke</strong></h3>
+                    Tags:
+                    <a href="#tag-Contract-Service">Contract Service</a>
+                </div>
+                <div class="panel-body">
+                    <section class="sw-operation-description">
+                        <p>Invoke a contract</p>
+
+                    </section>
+
+
+                    <section class="sw-request-body">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>
+                                <p>ABI payload indicating the function and data to call on the contract.</p>
+                                </p>
+                            </div>
+                            <div class="col-md-6 sw-request-model">
+                                <div class="panel panel-definition">
+                                    <div class="panel-body">
+                                        <a class="json-schema-ref" href="#/definitions/ABI">ABI</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="sw-request-params">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="sw-param-name"></th>
+                                    <th class="sw-param-description"></th>
+                                    <th class="sw-param-type"></th>
+                                    <th class="sw-param-data-type"></th>
+                                    <th class="sw-param-annotation"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        name
+                                    </td>
+                                    <td><p>Name of contract</p>
+                                    </td>
+                                    <td>path</td>
+                                    <td>
+                                        <span class="json-property-type">string</span>
+                                        <span class="json-property-range" title="Value limits"></span>
+
+                                    </td>
+                                    <td>
+                                        <span class="json-property-required"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section class="sw-responses">
+
+                        <dl>
+                            <dt class="sw-response-200">
+                                200 OK
+
+                            </dt>
+                            <dd class="sw-response-200">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Contract details</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                        <div class="panel panel-definition">
+                                            <div class="panel-body">
+                                                <a class="json-schema-ref" href="#/definitions/Contract">Contract</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </dd>
+                            <dt class="sw-response-400">
+                                400 Bad Request
+                                <span class="swagger--global"></span> <span class="json-schema--reference"><a
+                                href="#/responses/BadRequest">#/responses/BadRequest</a></span>
+
+                            </dt>
+                            <dd class="sw-response-400">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Invalid request</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                    </div>
+
+                                </div>
+                            </dd>
+                            <dt class="sw-response-403">
+                                403 Forbidden
+                                <span class="swagger--global"></span> <span class="json-schema--reference"><a
+                                href="#/responses/Forbidden">#/responses/Forbidden</a></span>
+
+                            </dt>
+                            <dd class="sw-response-403">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>User not authorized to perform this operation</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                    </div>
+
+                                </div>
+                            </dd>
+                        </dl>
+                    </section>
+                    <section class="sw-request-security">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="sw-request-security-schema"></th>
+                                    <th class="sw-request-security-scopes"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a href="#security-definition-OAuth2">OAuth2</a></td>
+                                    <td>
+                                        read:contracts
+                                        , execute:contracts
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+
+            <span id="path--transactions-payments"></span>
+            <div id="operation--transactions-payments-post" class="swagger--panel-operation-post panel">
+                <div class="panel-heading">
+                    <div
+                        class="operation-summary">Create a signed payment transaction to transfer ETH between 2 accounts
+                    </div>
+                    <h3 class="panel-title"><span class="operation-name">POST</span>
+                        <strong>/transactions/payments</strong></h3>
+                    Tags:
+                    <a href="#tag-Payment-Service">Payment Service</a>
+                </div>
+                <div class="panel-body">
+                    <section class="sw-operation-description">
+                        <p>Transfers Ether between 2 accounts. The source account must have sufficient balance to pay the gas fee.</p>
+
+                    </section>
+
+
+                    <section class="sw-request-body">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>
+                                <p>Payment request object</p>
+                                </p>
+                            </div>
+                            <div class="col-md-6 sw-request-model">
+                                <div class="panel panel-definition">
+                                    <div class="panel-body">
+                                        <a class="json-schema-ref"
+                                           href="#/definitions/PaymentRequest">PaymentRequest</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="sw-responses">
+
+                        <dl>
+                            <dt class="sw-response-201">
+                                201 Created
+
+                            </dt>
+                            <dd class="sw-response-201">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Successful operation</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                        <div class="panel panel-definition">
+                                            <div class="panel-body">
+                                                <a class="json-schema-ref"
+                                                   href="#/definitions/Transaction">Transaction</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </dd>
+                            <dt class="sw-response-400">
+                                400 Bad Request
+                                <span class="swagger--global"></span> <span class="json-schema--reference"><a
+                                href="#/responses/BadRequest">#/responses/BadRequest</a></span>
+
+                            </dt>
+                            <dd class="sw-response-400">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Invalid request</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                    </div>
+
+                                </div>
+                            </dd>
+                            <dt class="sw-response-403">
+                                403 Forbidden
+                                <span class="swagger--global"></span> <span class="json-schema--reference"><a
+                                href="#/responses/Forbidden">#/responses/Forbidden</a></span>
+
+                            </dt>
+                            <dd class="sw-response-403">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>User not authorized to perform this operation</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                    </div>
+
+                                </div>
+                            </dd>
+                        </dl>
+                    </section>
+                    <section class="sw-request-security">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="sw-request-security-schema"></th>
+                                    <th class="sw-request-security-scopes"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a href="#security-definition-OAuth2">OAuth2</a></td>
+                                    <td>
+                                        write:payments
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+
+            <span id="path--transactions-tokenpayments"></span>
+            <div id="operation--transactions-tokenpayments-post" class="swagger--panel-operation-post panel">
+                <div class="panel-heading">
+                    <div
+                        class="operation-summary">Create a signed payment transaction to transfer ERC-20 tokens between 2 accounts
+                    </div>
+                    <h3 class="panel-title"><span class="operation-name">POST</span>
+                        <strong>/transactions/tokenpayments</strong></h3>
+                    Tags:
+                    <a href="#tag-Payment-Service">Payment Service</a>
+                </div>
+                <div class="panel-body">
+                    <section class="sw-operation-description">
+                        <p>Transfers ERC-20 tokens between 2 accounts. The source account must have sufficient balance to pay the gas fee.</p>
+
+                    </section>
+
+
+                    <section class="sw-request-body">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>
+                                <p>Token payment request object</p>
+                                </p>
+                            </div>
+                            <div class="col-md-6 sw-request-model">
+                                <div class="panel panel-definition">
+                                    <div class="panel-body">
+                                        <a class="json-schema-ref"
+                                           href="#/definitions/TokenPaymentRequest">TokenPaymentRequest</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="sw-responses">
+
+                        <dl>
+                            <dt class="sw-response-201">
+                                201 Created
+
+                            </dt>
+                            <dd class="sw-response-201">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Successful operation</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                        <div class="panel panel-definition">
+                                            <div class="panel-body">
+                                                <a class="json-schema-ref"
+                                                   href="#/definitions/Transaction">Transaction</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </dd>
+                            <dt class="sw-response-400">
+                                400 Bad Request
+                                <span class="swagger--global"></span> <span class="json-schema--reference"><a
+                                href="#/responses/BadRequest">#/responses/BadRequest</a></span>
+
+                            </dt>
+                            <dd class="sw-response-400">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Invalid request</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                    </div>
+
+                                </div>
+                            </dd>
+                            <dt class="sw-response-403">
+                                403 Forbidden
+                                <span class="swagger--global"></span> <span class="json-schema--reference"><a
+                                href="#/responses/Forbidden">#/responses/Forbidden</a></span>
+
+                            </dt>
+                            <dd class="sw-response-403">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>User not authorized to perform this operation</p>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-6 sw-response-model">
+                                    </div>
+
+                                </div>
+                            </dd>
+                        </dl>
+                    </section>
+                    <section class="sw-request-security">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="sw-request-security-schema"></th>
+                                    <th class="sw-request-security-scopes"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a href="#security-definition-OAuth2">OAuth2</a></td>
+                                    <td>
+                                        write:payments
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+
+
+            <h2>Response definitions</h2>
+
+            <dl id="sw-response-definitions">
+                <dt><a name="/responses/BadRequest"></a>BadRequest</dt>
+                <dd>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>Invalid request</p>
+
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6 sw-response-model">
+                        </div>
+
+                    </div>
+                </dd>
+                <dt><a name="/responses/Forbidden"></a>Forbidden</dt>
+                <dd>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>User not authorized to perform this operation</p>
+
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6 sw-response-model">
+                        </div>
+
+                    </div>
+                </dd>
+            </dl>
+
+
+            <h2>Schema definitions</h2>
+
+
+            <div id="definition-ABI" class="panel panel-definition">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><a name="/definitions/ABI"></a>ABI:
+                        <span class="json-property-type">
+                <span class="json-property-type">object</span>
+                <span class="json-property-range" title="Value limits"></span>
+                
+                </span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+                    <section class="json-schema-properties">
+                        <dl>
+                            <dt data-property-name="functionSignature">
+                                <span class="json-property-name">functionSignature:</span>
+
+                                <span class="json-property-type">string</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+                                <p>The unencoded function signature.</p>
+
+                                <div class="json-inner-schema">
+                                    <section class="json-schema-example">
+                                                            <pre><code class="lang-json"><span
+                                                                class="hljs-string">&quot;myMethod(uint,uint32[],bytes10,bytes)&quot;</span>
+                                                    </code></pre>
+
+                                    </section>
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="params">
+                                <span class="json-property-name">params:</span>
+
+                                <span class="json-property-type">string[]</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                    <section class="json-schema-array-items">
+
+                                        <span class="json-property-type">string</span>
+                                        <span class="json-property-range" title="Value limits"></span>
+
+                                        <div class="json-inner-schema">
+
+                                        </div>
+                                    </section>
+                                </div>
+                            </dd>
+                        </dl>
+                    </section>
+                </div>
+            </div>
+            <div id="definition-Account" class="panel panel-definition">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><a name="/definitions/Account"></a>Account:
+                        <span class="json-property-type">
+                <span class="json-property-type">object</span>
+                <span class="json-property-range" title="Value limits"></span>
+                
+                </span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+                    <section class="json-schema-properties">
+                        <dl>
+                            <dt data-property-name="name">
+                                <span class="json-property-name">name:</span>
+
+                                <span class="json-property-type">string</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                                <span class="json-property-required"></span>
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="address">
+                                <span class="json-property-name">address:</span>
+
+                                <span class="json-property-type">string</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="status">
+                                <span class="json-property-name">status:</span>
+
+                                <span class="json-property-type">string</span> <span class="json-property-enum"
+                                                                                     title="Possible values">, x &isin; {
+                                                                <span class="json-property-enum-item">ACTIVE</span>
+                                                            ,
+                                                                <span class="json-property-enum-item">LOCKED</span>
+                                                            ,
+                                                                <span class="json-property-enum-item">DELETED</span>
+                                                            ,
+                                                                <span
+                                                                    class="json-property-enum-item">INSUFFICIENT_FUNDS</span>
+                                                            ,
+                                                                <span class="json-property-enum-item">PENDING</span>
+                                                            
+                                                        }
+                                                        </span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+                                <p>The status of the account.</p>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="created_date">
+                                <span class="json-property-name">created_date:</span>
+
+                                <span class="json-property-type">string</span> <span
+                                class="json-property-format">(date-time)</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="last_modified_date">
+                                <span class="json-property-name">last_modified_date:</span>
+
+                                <span class="json-property-type">string</span> <span
+                                class="json-property-format">(date-time)</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                        </dl>
+                    </section>
+                </div>
+            </div>
+            <div id="definition-Accounts" class="panel panel-definition">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><a name="/definitions/Accounts"></a>Accounts:
+                        <span class="json-property-type">
+                <span class="json-property-type">object[]</span>
+                <span class="json-property-range" title="Value limits"></span>
+                
+                </span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+                    <section class="json-schema-array-items">
+                                                
+                                                <span class="json-property-type">    <a class="json-schema-ref"
+                                                                                        href="#/definitions/Account">Account</a>
+                                                </span>
+                        <span class="json-property-range" title="Value limits"></span>
+
+                        <div class="json-inner-schema">
+
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div id="definition-Contract" class="panel panel-definition">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><a name="/definitions/Contract"></a>Contract:
+                        <span class="json-property-type">
+                <span class="json-property-type">object</span>
+                <span class="json-property-range" title="Value limits"></span>
+                
+                </span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+                    <section class="json-schema-properties">
+                        <dl>
+                            <dt data-property-name="name">
+                                <span class="json-property-name">name:</span>
+
+                                <span class="json-property-type">string</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                                <span class="json-property-required"></span>
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="transactionHash">
+                                <span class="json-property-name">transactionHash:</span>
+
+                                <span class="json-property-type">string</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="address">
+                                <span class="json-property-name">address:</span>
+
+                                <span class="json-property-type">string</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="status">
+                                <span class="json-property-name">status:</span>
+
+                                <span class="json-property-type">string</span> <span class="json-property-enum"
+                                                                                     title="Possible values">, x &isin; {
+                                                                <span class="json-property-enum-item">ACTIVE</span>
+                                                            ,
+                                                                <span class="json-property-enum-item">LOCKED</span>
+                                                            ,
+                                                                <span class="json-property-enum-item">DELETED</span>
+                                                            ,
+                                                                <span
+                                                                    class="json-property-enum-item">INSUFFICIENT_FUNDS</span>
+                                                            ,
+                                                                <span class="json-property-enum-item">PENDING</span>
+                                                            
+                                                        }
+                                                        </span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+                                <p>The status of the contract.</p>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="created_date">
+                                <span class="json-property-name">created_date:</span>
+
+                                <span class="json-property-type">string</span> <span
+                                class="json-property-format">(date-time)</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="last_modified_date">
+                                <span class="json-property-name">last_modified_date:</span>
+
+                                <span class="json-property-type">string</span> <span
+                                class="json-property-format">(date-time)</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                        </dl>
+                    </section>
+                </div>
+            </div>
+            <div id="definition-Contracts" class="panel panel-definition">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><a name="/definitions/Contracts"></a>Contracts:
+                        <span class="json-property-type">
+                <span class="json-property-type">object[]</span>
+                <span class="json-property-range" title="Value limits"></span>
+                
+                </span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+                    <section class="json-schema-array-items">
+                                                
+                                                <span class="json-property-type">    <a class="json-schema-ref"
+                                                                                        href="#/definitions/Contract">Contract</a>
+                                                </span>
+                        <span class="json-property-range" title="Value limits"></span>
+
+                        <div class="json-inner-schema">
+
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div id="definition-PaymentRequest" class="panel panel-definition">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><a name="/definitions/PaymentRequest"></a>PaymentRequest:
+                        <span class="json-property-type">
+                <span class="json-property-type">object</span>
+                <span class="json-property-range" title="Value limits"></span>
+                
+                </span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+                    <section class="json-schema-properties">
+                        <dl>
+                            <dt data-property-name="sourceCfAccountId">
+                                <span class="json-property-name">sourceCfAccountId:</span>
+
+                                <span class="json-property-type">string</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                                <span class="json-property-required"></span>
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="destinationCfAccountId">
+                                <span class="json-property-name">destinationCfAccountId:</span>
+
+                                <span class="json-property-type">string</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                                <span class="json-property-required"></span>
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="amount">
+                                <span class="json-property-name">amount:</span>
+
+                                <span class="json-property-type">number</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                                <span class="json-property-required"></span>
+                            </dt>
+                            <dd>
+                                <p>Amount to pay, in wei</p>
+
+                                <div class="json-inner-schema">
+                                    <section class="json-schema-example">
+                                                                <pre><code class="lang-json"><span
+                                                                    class="hljs-string">&quot;100.00&quot;</span>
+                                                        </code></pre>
+
+                                    </section>
+
+                                </div>
+                            </dd>
+                        </dl>
+                    </section>
+                </div>
+            </div>
+            <div id="definition-TokenPaymentRequest" class="panel panel-definition">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><a name="/definitions/TokenPaymentRequest"></a>TokenPaymentRequest:
+                        <span class="json-property-type">
+                <span class="json-property-type">object</span>
+                <span class="json-property-range" title="Value limits"></span>
+                
+                </span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+                    <section class="json-schema-properties">
+                        <dl>
+                            <dt data-property-name="sourceCfAccountId">
+                                <span class="json-property-name">sourceCfAccountId:</span>
+
+                                <span class="json-property-type">string</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                                <span class="json-property-required"></span>
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="destinationCfAccountId">
+                                <span class="json-property-name">destinationCfAccountId:</span>
+
+                                <span class="json-property-type">string</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                                <span class="json-property-required"></span>
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="tokenAccountName">
+                                <span class="json-property-name">tokenAccountName:</span>
+
+                                <span class="json-property-type">string</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                                <span class="json-property-required"></span>
+                            </dt>
+                            <dd>
+                                <p>Name of the account which has the ERC-20 token contract</p>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="amount">
+                                <span class="json-property-name">amount:</span>
+
+                                <span class="json-property-type">number</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                                <span class="json-property-required"></span>
+                            </dt>
+                            <dd>
+                                <p>Amount of ERC-20 tokens to transfer</p>
+
+                                <div class="json-inner-schema">
+                                    <section class="json-schema-example">
+                                                                <pre><code class="lang-json"><span
+                                                                    class="hljs-string">&quot;100.00&quot;</span>
+                                                        </code></pre>
+
+                                    </section>
+
+                                </div>
+                            </dd>
+                        </dl>
+                    </section>
+                </div>
+            </div>
+            <div id="definition-Transaction" class="panel panel-definition">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><a name="/definitions/Transaction"></a>Transaction:
+                        <span class="json-property-type">
+                <span class="json-property-type">object</span>
+                <span class="json-property-range" title="Value limits"></span>
+                
+                </span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+                    <section class="json-schema-properties">
+                        <dl>
+                            <dt data-property-name="transactionHash">
+                                <span class="json-property-name">transactionHash:</span>
+
+                                <span class="json-property-type">string</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="sourceAddress">
+                                <span class="json-property-name">sourceAddress:</span>
+
+                                <span class="json-property-type">string</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="destinationAddress">
+                                <span class="json-property-name">destinationAddress:</span>
+
+                                <span class="json-property-type">string</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="amount">
+                                <span class="json-property-name">amount:</span>
+
+                                <span class="json-property-type">number</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+                                    <section class="json-schema-example">
+                                                                <pre><code class="lang-json"><span
+                                                                    class="hljs-string">&quot;100.00&quot;</span>
+                                                        </code></pre>
+
+                                    </section>
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="gasPrice">
+                                <span class="json-property-name">gasPrice:</span>
+
+                                <span class="json-property-type">number</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="gasLimit">
+                                <span class="json-property-name">gasLimit:</span>
+
+                                <span class="json-property-type">number</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="nonce">
+                                <span class="json-property-name">nonce:</span>
+
+                                <span class="json-property-type">number</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                            <dt data-property-name="signedTransaction">
+                                <span class="json-property-name">signedTransaction:</span>
+
+                                <span class="json-property-type">string</span>
+                                <span class="json-property-range" title="Value limits"></span>
+
+                            </dt>
+                            <dd>
+
+                                <div class="json-inner-schema">
+
+                                </div>
+                            </dd>
+                        </dl>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <script src="bundle.js" type="application/javascript"></script>
+    </body>
+</html>

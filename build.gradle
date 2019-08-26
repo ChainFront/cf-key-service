@@ -1,0 +1,318 @@
+buildscript {
+    ext.kotlin_version = '1.3.21'
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        // The gradle-docker plugin we want to use isn't yet in gradle plugin portal, se we
+        // pull it from jcenter
+        classpath 'se.transmode.gradle:gradle-docker:1.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version" 
+
+    }
+}
+
+plugins {
+    // Use the Spring Boot Gradle plugin, which automatically applies the dependency management plugin
+    // and configures it to import the spring-boot-starter-parent bom.
+    id 'org.springframework.boot' version '2.0.6.RELEASE'
+
+    // Versioning plugin
+    id 'pl.allegro.tech.build.axion-release' version '1.8.1'
+
+    // Lombok
+    id 'io.franzbecker.gradle-lombok' version '1.14'
+}
+
+/*
+ * Copyright (c) 2019 ChainFront LLC.
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *  
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *  
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// The Java plugin allows us to compile and package our code into a jar file
+apply plugin: 'java'
+apply plugin: 'kotlin'
+//apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-spring'
+
+// The Spring plugin that lets us use maven BOMs
+apply plugin: 'io.spring.dependency-management'
+
+// Publishing to a maven repo
+apply plugin: 'maven-publish'
+
+// Support for packaging our application as a Docker image
+apply plugin: 'docker'
+
+// Define the namespace for our build artifacts
+group 'pcrypto'
+
+// Explicitly declare that we're using JDK 1.8
+sourceCompatibility = 1.8
+
+
+repositories {
+    // Use Maven Central to resolve all 3rd party dependencies
+    mavenCentral()
+
+    // We want the release candidate build of Spring Cloud Stream, which is only in the milestone repo
+    maven {
+        url 'https://repo.spring.io/libs-milestone'
+    }
+
+    // For custom-built libs (such as java-stellar-sdk and ripple-lib-java)
+    mavenLocal()
+}
+
+// Using the dependency management plugin, import the dependencies for
+// Spring Cloud release train 'Finchley.SR2'
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Finchley.SR2'
+    }
+}
+
+dependencies {
+    // ChainFront core
+    compile group: 'pcrypto', name: 'cf-core', version: '0.10.0'
+
+    // Enable Spring MVC
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+
+    // Spring Security
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'
+
+    // Spring cloud vault
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-vault-config'
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-vault-config-aws'
+    // Force upgrade to 2.1.0 for improved exception handling
+    compile group: 'org.springframework.vault', name: 'spring-vault-core', version: '2.1.0.RELEASE'
+
+    // Spring Security OAuth
+    compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.3.3.RELEASE'
+
+    // JWT
+    compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '6.0.2'
+
+    // Spring Cloud Stream w/ Kafka
+    compile 'org.springframework.cloud:spring-cloud-stream'
+    compile 'org.springframework.cloud:spring-cloud-starter-stream-kafka'
+
+    // Email
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
+
+    // Authy for SMS and MFA push approvals
+    compile group: 'com.authy', name: 'authy-java', version: '1.5.0'
+
+    // Phone number parsing and validation with Google libphonenumber
+    compile group: 'com.googlecode.libphonenumber', name: 'libphonenumber', version: '8.9.15'
+
+    // Spring Data
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+    compile group: 'org.springframework.data', name: 'spring-data-jdbc', version: '1.0.0.RELEASE'
+    //compile group: 'org.springframework.data', name: 'spring-data-commons', version: '2.1.0.RELEASE'
+
+    // Force validation API version
+    compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+
+    // JDBC
+    //compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.1'
+    compile group: 'org.apache.tomcat', name: 'tomcat-jdbc', version: '9.0.12'
+
+    // ElSql
+    compile group: 'com.opengamma', name: 'elsql', version: '1.3'
+
+    // Apache common utility methods.
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
+
+    // Service registration via Eureka
+//    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-server'
+
+    // Feign declarative REST client
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
+
+    // Ethereum client
+    compile 'org.web3j:core:4.1.0'
+
+    // Stellar client (custom forked build to work with JDK 10 and Spring Boot 2)
+    compile( 'stellar:java-stellar-sdk:0.3.4' ) {
+        exclude group: 'javax.validation', module: 'validation-api'
+    }
+
+    // Ripple client (custom forked)
+    compile( 'com.ripple:ripple-client:0.1.0' )
+    compile( 'com.ripple:ripple-client-java-websocket-transport:0.1.0' )
+
+    // Bitcoin java library
+    compile( 'org.bitcoinj:bitcoinj-core:0.15' )
+
+    // Apache Commons IO
+    compile 'commons-io:commons-io:2.6'
+
+    // Production metrics for Spring Boot
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+
+    // Enable distributed tracing with Sleuth
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-zipkin'
+
+    // Spring Boot Admin client
+    compile group: 'de.codecentric', name: 'spring-boot-admin-starter-client', version: '2.0.4'
+
+    // OpenAPI (aka Swagger)
+    compile 'io.springfox:springfox-swagger2:2.9.2'
+
+    // Enable JSON logging
+    runtime( group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '4.11' ) {
+        exclude group: 'ch.qos.logback', module: 'logback-core'
+    }
+
+    // Needed for AWS IAM vault authentication
+    runtime 'com.amazonaws:aws-java-sdk-core'
+
+    // Package the javax.xml.bind module (required for JDK 9+)
+    runtime 'javax.xml.bind:jaxb-api:2.3.0'
+
+    // Test support
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+
+    // Rest-Assured
+    testCompile 'io.rest-assured:rest-assured:3.2.0'
+    testCompile 'io.rest-assured:spring-mock-mvc:3.2.0'
+
+    // Testing with JUnit 5
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.1.0'
+
+    // Email testing
+    testCompile group: 'com.icegreen', name: 'greenmail', version: '1.5.0'
+    
+    // Kotlin runtime
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+}
+
+// Versioning with the Axion release plugin
+scmVersion {
+
+    // Treat uncommitted changes as trigger for version increment
+    ignoreUncommittedChanges = true
+
+    // All versions will start with "v"
+    tag {
+        prefix = 'v'
+        versionSeparator = ''
+    }
+
+    // Our versioning scheme is major.minor.rcX. If we're on a branch named "release/*", increment the release
+    // candidate number, otherwise increment the minor version number.
+    versionIncrementer 'incrementMinorIfNotOnRelease', [releaseBranchPattern: 'release.*']
+    branchVersionIncrementer = [
+          'master'    : 'incrementMinor',
+          'feature'   : 'incrementMinor',
+          'release/.*': 'incrementPrerelease'
+    ]
+
+    // Decorators
+    versionCreator 'simple'
+    branchVersionCreator = [
+          'feature/.*': 'versionWithBranch'
+    ]
+
+    checks {
+        // Allow for releasing a new version if there are uncommitted changes
+        uncommittedChanges = false
+    }
+}
+project.version = scmVersion.version
+
+// Add the version number to the manifest
+jar {
+    manifest {
+        attributes( "Implementation-Title": project.name,
+                    "Implementation-Version": project.version.toString() )
+    }
+}
+
+// Configure the spring boot executable jar
+springBoot {
+    mainClassName = "pcrypto.cf.Application"
+}
+bootJar {
+    launchScript()
+}
+
+// Publishing build artifacts to our private maven repo
+publishing {
+    repositories {
+        // Private repo for publishing build artifacts
+        maven {
+            url "s3://chainfront-maven-repo/${project.version.endsWith( '-SNAPSHOT' ) ? 'snapshot' : 'release'}"
+            authentication {
+                awsIm( AwsImAuthentication ) // load from EC2 role or env var
+            }
+        }
+    }
+    publications {
+        mavenJava( MavenPublication ) {
+            from project.components.java
+        }
+    }
+}
+
+// Configure the Lombok version
+lombok {
+    version = "1.18.2"
+}
+
+// Convenience to let JPA work with Kotlin
+allOpen {
+    annotation("javax.persistence.Entity")
+}
+
+// Build the docker container for this application
+task buildDocker( type: Docker, dependsOn: build ) {
+    push = false
+    applicationName = rootProject.name
+    dockerfile = file( 'Dockerfile' )
+
+    doFirst {
+        // Rename the app jar to "app.jar" so that the Dockerfile does not require renames
+        copy {
+            from "${project.buildDir}/libs"
+            into stageDir
+            include "${rootProject.name}-${version}.jar"
+            rename( "${rootProject.name}-${version}.jar", "app.jar" )
+        }
+    }
+}
+
+// Configure the Gradle wrapper
+wrapper {
+    gradleVersion = '4.10.2'
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+

@@ -1,0 +1,169 @@
+server:
+  # Listening port
+  port: 8080
+  # Hide the server version
+  server-header: Apache
+
+
+spring:
+  http:
+    # Character set encoding
+    encoding:
+      enabled: true
+      force: true
+  jpa:
+    database: POSTGRESQL
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    properties:
+      # https://github.com/pgjdbc/pgjdbc/issues/1102#issuecomment-398036270
+      hibernate.jdbc.lob.non_contextual_creation: true
+      # Switch to the default Spring JPA naming strategy (underscore to camelcase conversion)
+      hibernate.naming.physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+  mail:
+    host: stored-in-vault
+    port: 587
+    protocol: smtp
+    username: stored-in-vault
+    password: stored-in-vault
+  # Send distributed traces to zipkin server (using Eureka to find the server)
+  sleuth:
+    sampler:
+      probability: 1.0
+  zipkin:
+    baseUrl: http://zipkin-service/
+  # Move the default security filter to a lower order so we can have our multitenant filter run first
+  security:
+    filter:
+      order: 5
+  cloud:
+    stream:
+      kafka:
+        binder:
+          auto-create-topics: true
+          replicationFactor: 1
+          brokers: localhost:9092
+      bindings:
+        stellar-approval-inbound:
+          destination: stellar-approvals
+          contentType: application/json
+        stellar-approval-outbound:
+          destination: stellar-approvals
+          contentType: application/json
+        ripple-approval-inbound:
+          destination: ripple-approvals
+          contentType: application/json
+        ripple-approval-outbound:
+          destination: ripple-approvals
+          contentType: application/json
+        ethereum-approval-inbound:
+          destination: ethereum-approvals
+          contentType: application/json
+        ethereum-approval-outbound:
+          destination: ethereum-approvals
+          contentType: application/json
+        bitcoin-approval-inbound:
+          destination: bitcoin-approvals
+          contentType: application/json
+        bitcoin-approval-outbound:
+          destination: bitcoin-approvals
+          contentType: application/json
+
+## ------------------------
+## Main chainfront datasource
+## ------------------------
+# Default db connection properties (overridden externally for prod-like environments)
+cf:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cfdb
+    username: stored-in-vault
+    password: stored-in-vault
+    driver-class-name: org.postgresql.Driver
+    # Connection pool settings
+    validation-query: 'SELECT 1'
+    test-on-borrow: true
+    initial-size: 10
+    min-idle: 10
+    max-idle: 10
+    max-wait: -1
+    remove-abandoned: true
+    remove-abandoned-timeout: 600
+    log-abandoned: true
+    jmx-enabled: true
+
+ripple:
+  wss-url: stored-in-vault
+
+ethereum:
+  geth-url: stored-in-vault
+
+bitcore:
+  url: https://test-insight.bitpay.com/api
+# url: http://localhost:3001/insight-api
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: DEBUG
+    pcrypto.cf.config.persistence: DEBUG
+    org.springframework.data: INFO
+
+
+---
+spring:
+  profiles: dev
+  jpa:
+    show-sql: true
+  boot:
+    admin:
+      client:
+        url: http://localhost:8100
+        instance:
+          service-base-url: http://localhost:8000
+
+management:
+  server:
+    port: 8000
+    add-application-context-header: false
+    ssl:
+      # Disable SSL security on the management port (NOT FOR PRODUCTION)
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+authy:
+  api.key: stored-in-vault
+
+---
+spring:
+  profiles: aws-sandbox
+  cloud:
+    stream:
+      kafka:
+        binder:
+          replicationFactor: 1
+          brokers: 10.10.3.30:9092
+
+management:
+  server:
+    port: 8000
+    add-application-context-header: false
+    ssl:
+      # Disable SSL security on the management port (NOT FOR PRODUCTION)
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+authy:
+  api.key: stored-in-vault

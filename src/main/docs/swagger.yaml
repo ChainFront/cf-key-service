@@ -1,0 +1,474 @@
+swagger: "2.0"
+
+info:
+  version: 0.9.0-alpha
+  title: ChainFront Key Management Service - Ethereum
+
+tags:
+- name: Account Service
+  description: Account management APIs
+- name: Contract Service
+  description: Contract APIs
+- name: Payment Service
+  description: Payment APIs
+
+schemes:
+- https
+
+host: api.chainfront.io
+basePath: /v1/eth
+
+securityDefinitions:
+  OAuth2:
+    type: oauth2
+    flow: accessCode
+    authorizationUrl: 'https://api.chainfront.io/oauth/authorization'
+    tokenUrl: 'https://api.chainfront.io/oauth/token'
+    scopes:
+      'admin': Admin scope
+      'write:accounts': Ability to create accounts
+      'read:accounts': Ability to read accounts
+      'write:payments': Ability to create payment transactions
+      'write:contracts': Ability to create contracts
+      'read:contracts': Ability to read contracts
+      'execute:contracts': Ability to execute contracts
+
+security:
+- OAuth2:
+  - 'read:accounts'
+
+consumes:
+- application/json
+produces:
+- application/json
+
+paths:
+  /accounts:
+    get:
+      tags:
+      - Account Service
+      summary: List accounts
+      description: Returns a paginated list of all accounts.
+      parameters:
+      - name: pageSize
+        in: query
+        description: Number of accounts returned
+        type: integer
+      - name: pageNumber
+        in: query
+        description: Page number
+        type: integer
+      responses:
+        200:
+          description: A list of accounts
+          schema:
+            $ref: "#/definitions/Accounts"
+        400:
+          $ref: "#/responses/BadRequest"
+        403:
+          $ref: "#/responses/Forbidden"
+      security:
+      - OAuth2:
+        - 'read:accounts'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        type: "mock"
+    post:
+      tags:
+      - Account Service
+      summary: Create account
+      description: Create a new account
+      parameters:
+      - name: account
+        in: body
+        description: "Account to create. 'name' is the only field required."
+        schema:
+          $ref: "#/definitions/Account"
+      responses:
+        201:
+          description: Account created successfully
+          schema:
+            $ref: '#/definitions/Account'
+        400:
+          $ref: "#/responses/BadRequest"
+        403:
+          $ref: "#/responses/Forbidden"
+      security:
+      - OAuth2:
+        - 'read:accounts'
+        - 'write:accounts'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        type: "mock"
+  '/accounts/{name}':
+    get:
+      tags:
+      - Account Service
+      summary: Get account
+      description: Returns account details for the given account name
+      parameters:
+      - name: name
+        in: path
+        required: true
+        description: Name of account
+        type: string
+      responses:
+        200:
+          description: Account details
+          schema:
+            $ref: "#/definitions/Account"
+        400:
+          $ref: "#/responses/BadRequest"
+        403:
+          $ref: "#/responses/Forbidden"
+      security:
+      - OAuth2:
+        - 'read:accounts'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        type: "mock"
+  /contracts:
+    get:
+      tags:
+      - Contract Service
+      summary: List contracts
+      description: Returns a paginated list of all contracts.
+      parameters:
+      - name: pageSize
+        in: query
+        description: Number of contracts returned
+        type: integer
+      - name: pageNumber
+        in: query
+        description: Page number
+        type: integer
+      responses:
+        200:
+          description: A list of contracts
+          schema:
+            $ref: "#/definitions/Contracts"
+        400:
+          $ref: "#/responses/BadRequest"
+        403:
+          $ref: "#/responses/Forbidden"
+      security:
+      - OAuth2:
+        - 'read:contracts'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        type: "mock"
+    post:
+      tags:
+      - Contract Service
+      summary: Create contract
+      description: Create a new contract
+      parameters:
+      - name: contract
+        in: body
+        description: The contract to create.
+        schema:
+          $ref: "#/definitions/Contract"
+      responses:
+        201:
+          description: Contract created successfully
+          schema:
+            $ref: '#/definitions/Contract'
+        400:
+          $ref: "#/responses/BadRequest"
+        403:
+          $ref: "#/responses/Forbidden"
+      security:
+      - OAuth2:
+        - 'read:contracts'
+        - 'write:contracts'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        type: "mock"
+  '/contracts/{name}':
+    get:
+      tags:
+      - Contract Service
+      summary: Get contract
+      description: Returns contract details for the given contract name
+      parameters:
+      - name: name
+        in: path
+        required: true
+        description: Name of contract
+        type: string
+      responses:
+        200:
+          description: Contract details
+          schema:
+            $ref: "#/definitions/Contract"
+        400:
+          $ref: "#/responses/BadRequest"
+        403:
+          $ref: "#/responses/Forbidden"
+      security:
+      - OAuth2:
+        - 'read:contracts'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        type: "mock"
+  '/contracts/{name}/invoke':
+    post:
+      tags:
+      - Contract Service
+      summary: Invoke a contract
+      description: Invoke a contract
+      parameters:
+      - name: name
+        in: path
+        required: true
+        description: Name of contract
+        type: string
+      - name: contractRequest
+        in: body
+        description: ABI payload indicating the function and data to call on the contract.
+        schema:
+          $ref: "#/definitions/InvokeContractRequest"
+      responses:
+        200:
+          description: Contract details
+          schema:
+            $ref: "#/definitions/Transaction"
+        400:
+          $ref: "#/responses/BadRequest"
+        403:
+          $ref: "#/responses/Forbidden"
+      security:
+      - OAuth2:
+        - 'read:contracts'
+        - 'execute:contracts'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        type: "mock"
+  /transactions/payments:
+    post:
+      tags:
+      - Payment Service
+      summary: 'Create a signed payment transaction to transfer ETH between 2 accounts'
+      description: 'Transfers Ether between 2 accounts. The source account must have sufficient balance to pay the gas fee.'
+      operationId: createPayment
+      parameters:
+      - in: body
+        name: body
+        description: Payment request object
+        required: true
+        schema:
+          $ref: '#/definitions/PaymentRequest'
+      responses:
+        201:
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Transaction'
+        400:
+          $ref: "#/responses/BadRequest"
+        403:
+          $ref: "#/responses/Forbidden"
+      security:
+      - OAuth2:
+        - 'write:payments'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        type: "mock"
+  /transactions/tokenpayments:
+    post:
+      tags:
+      - Payment Service
+      summary: 'Create a signed payment transaction to transfer ERC-20 tokens between 2 accounts'
+      description: 'Transfers ERC-20 tokens between 2 accounts. The source account must have sufficient balance to pay the gas fee.'
+      operationId: createTokenPayment
+      parameters:
+      - in: body
+        name: body
+        description: Token payment request object
+        required: true
+        schema:
+          $ref: '#/definitions/TokenPaymentRequest'
+      responses:
+        201:
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Transaction'
+        400:
+          $ref: "#/responses/BadRequest"
+        403:
+          $ref: "#/responses/Forbidden"
+      security:
+      - OAuth2:
+        - 'write:payments'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        type: "mock"
+
+definitions:
+  Account:
+    required:
+    - name
+    properties:
+      name:
+        type: string
+      address:
+        type: string
+      status:
+        type: string
+        description: "The status of the account."
+        enum: ["ACTIVE", "LOCKED", "DELETED", "INSUFFICIENT_FUNDS", "PENDING"]
+      created_date:
+        type: string
+        format: 'date-time'
+      last_modified_date:
+        type: string
+        format: 'date-time'
+  Accounts:
+    type: array
+    items:
+      $ref: "#/definitions/Account"
+  Contract:
+    required:
+    - name
+    properties:
+      name:
+        type: string
+      transactionHash:
+        type: string
+      address:
+        type: string
+      status:
+        type: string
+        description: "The status of the contract."
+        enum: ["ACTIVE", "LOCKED", "DELETED", "INSUFFICIENT_FUNDS", "PENDING"]
+      created_date:
+        type: string
+        format: 'date-time'
+      last_modified_date:
+        type: string
+        format: 'date-time'
+  Contracts:
+    type: array
+    items:
+      $ref: "#/definitions/Contract"
+  InvokeContractRequest:
+    type: object
+    required:
+    - sourceAccountName
+    - functionSignature
+    properties:
+      sourceAccountName:
+        type: string
+      functionSignature:
+        type: string
+        description: "The unencoded function signature."
+        example:
+          "myMethod(uint,uint32[],bytes10,bytes)"
+      params:
+        type: array
+        items:
+          type: string
+  PaymentRequest:
+    type: object
+    required:
+    - sourceAccountName
+    - destinationAccountName
+    - amount
+    properties:
+      sourceAccountName:
+        type: string
+      destinationAccountName:
+        type: string
+      amount:
+        type: number
+        description: "Amount to pay, in wei"
+        example: '100.00'
+  Transaction:
+    type: object
+    properties:
+      transactionHash:
+        type: string
+      sourceAddress:
+        type: string
+      destinationAddress:
+        type: string
+      amount:
+        type: number
+        example: '100.00'
+      gasPrice:
+        type: number
+      gasLimit:
+        type: number
+      nonce:
+        type: number
+      signedTransaction:
+        type: string
+  TokenPaymentRequest:
+    type: object
+    required:
+    - sourceAccountName
+    - destinationAccountName
+    - tokenAccountName
+    - amount
+    properties:
+      sourceAccountName:
+        type: string
+      destinationAccountName:
+        type: string
+      tokenAccountName:
+        description: "Name of the account which has the ERC-20 token contract"
+        type: string
+      amount:
+        type: number
+        description: "Amount of ERC-20 tokens to transfer"
+        example: '100.00'
+
+responses:
+  BadRequest:
+    description: "Invalid request"
+  Forbidden:
+    description: "User not authorized to perform this operation"

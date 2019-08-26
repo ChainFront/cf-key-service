@@ -1,0 +1,57 @@
+spring:
+  application:
+    name: cf-key-service
+
+---
+spring:
+  profiles: dev
+  cloud:
+    vault:
+      host: localhost
+      port: 8200
+      scheme: http
+      authentication: TOKEN
+      token: root
+
+---
+spring:
+  profiles: aws-qa
+  cloud:
+    vault:
+      host: qa-vault.chainfront.internal
+      port: 8443
+      scheme: https
+      authentication: AWS_IAM
+      aws-iam:
+        role: aws-qa-role
+        aws-path: aws
+        server-name: qa.chainfront.internal
+
+---
+spring:
+  profiles: aws-sandbox
+  cloud:
+    vault:
+      host: sandbox-vault.chainfront.internal
+      port: 8200
+      scheme: http
+      authentication: AWS_IAM
+      aws-iam:
+        role: app-server-role
+        aws-path: aws
+        server-name: sandbox.chainfront.io
+
+
+---
+spring:
+  profiles: aws-prod
+  cloud:
+    vault:
+      host: vault.chainfront.internal
+      port: 8443
+      scheme: https
+      authentication: AWS_IAM
+      aws-iam:
+        role: aws-prod-role
+        aws-path: aws
+        server-name: api.chainfront.io
